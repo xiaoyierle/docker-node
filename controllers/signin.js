@@ -1,4 +1,5 @@
 // sign in:
+const {findData,addData,deleData,exitData} = require('../middleware/mysql.js');
 
 module.exports = {
   "POST /signin": async (ctx, next) => {
@@ -16,5 +17,12 @@ module.exports = {
         title: "Sign In Failed"
       });
     }
+  },
+  "GET /signin/info":async (ctx, next) => {
+    await next();
+    ctx.body = {
+      aa:1,
+      bb:2
+    };
   }
 };
