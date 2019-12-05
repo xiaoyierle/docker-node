@@ -15,7 +15,7 @@ module.exports = {
     //   let statements = res.statements;
     await findData(query).then(
         data => {
-        ctx.body = data;
+        ctx.body = { message: "OK", code: '200', data: data }
         },
         () => {
         ctx.body = { err: "数据获取失败" };
