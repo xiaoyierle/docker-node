@@ -1,14 +1,8 @@
 // mysql:
 const { findData, addData, deleData, exitData } = require("../middleware/mysql");
 module.exports = {
-  "GET /mysql": async (ctx, next) => {
-    ctx.render("mysql.html", {
-      title: "测试数据库",
-      name: "11111"
-    })
-  },
-  "GET /mysql/user/getTableData": async (ctx, next) => {
-    const query = 'SELECT * FROM user'
+  "GET /mysql/setting/class/getTableData": async (ctx, next) => {
+    const query = 'SELECT * FROM class'
     // 获取数据
     // let res = ctx.query; // 返回的数据格式为json
     ctx.response.type = "json";
@@ -22,14 +16,14 @@ module.exports = {
         }
     );
   },
-  "GET /mysql/user/getUserInfo": async (ctx, next) => {
+  "GET /mysql/setting/class/getClassInfo": async (ctx, next) => {
     const { id } = ctx.request.query
-    const queryUser = 'SELECT * FROM user WHERE id = ? '
+    const query = 'SELECT * FROM class WHERE id = ? '
     // 获取数据
     // let res = ctx.query; // 返回的数据格式为json
     ctx.response.type = "json";
     //   let statements = res.statements;
-    await findData(queryUser, [id]).then(
+    await findData(query, [id]).then(
         data => {
         ctx.body = { message: "OK", code: '200', data: data }
         },
@@ -38,20 +32,20 @@ module.exports = {
         }
     );
   },
-  "POST /mysql/user/addUserInfo": async (ctx, next) => {
-    const { name, password } = ctx.request.body
-    const queryUser = 'SELECT * FROM user WHERE username = ? '
-    await findData(queryUser,[name]).then(
+  "POST /mysql/setting/class/addClassInfo": async (ctx, next) => {
+    const { className } = ctx.request.body
+    const query = 'SELECT * FROM class WHERE classname = ? '
+    await findData(query,[className]).then(
       data => {
         if(data && data.length){
-          ctx.body = { message: "该用户已注册", code: '500' }
+          ctx.body = { message: "该班级已添加", code: '500' }
         } else {
-          const query = 'insert into user (username,password)values(?,?)'
+          const query = 'insert into class (className)values(?)'
           // 获取数据
           ctx.response.type = "json"
-          return addData(query,[name, password]).then(
+          return addData(query,[className]).then(
             data => {
-            ctx.body = { message: "OK", code: '200', data: {id:data.insertId, username: name} }
+            ctx.body = { message: "OK", code: '200', data: {id:data.insertId, classname: className} }
             },
             () => {
             ctx.body = { message: "新增失败", code: '500' };
@@ -64,9 +58,9 @@ module.exports = {
       }
     )
   },
-  "DELETE /mysql/user/delUserInfo": async (ctx, next) => {
+  "DELETE /mysql/setting/class/delClassInfo": async (ctx, next) => {
     const { id } = ctx.request.query
-    const query = 'DELETE FROM user WHERE ??=?'
+    const query = 'DELETE FROM class WHERE ??=?'
     // 获取数据
     // let res = ctx.query; // 返回的数据格式为json
     ctx.response.type = "json";
@@ -80,14 +74,14 @@ module.exports = {
         }
     );
   },
-  "PUT /mysql/user/updateUserInfo": async (ctx, next) => {
-    const { id, password } = ctx.request.body
-    const query = 'UPDATE user SET ??=? WHERE ??=?'
+  "PUT /mysql/setting/class/updateClassInfo": async (ctx, next) => {
+    const { id, classname } = ctx.request.body
+    const query = 'UPDATE class SET ??=? WHERE ??=?'
     // 获取数据
     // let res = ctx.query; // 返回的数据格式为json
     ctx.response.type = "json";
     //   let statements = res.statements;
-    await exitData(query,['password',password,'id',id]).then(
+    await exitData(query,['classname',classname,'id',id]).then(
         data => {
         ctx.body = { message: "OK", code: '200' }
         },
