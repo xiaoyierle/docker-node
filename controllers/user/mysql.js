@@ -1,5 +1,5 @@
 // mysql:
-const { findData, addData, deleData, exitData } = require("../middleware/mysql");
+const { findData, addData, deleData, exitData } = require("../../middleware/mysql");
 module.exports = {
   "GET /mysql": async (ctx, next) => {
     ctx.render("mysql.html", {
