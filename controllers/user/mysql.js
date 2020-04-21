@@ -1,5 +1,5 @@
 // mysql:
-const { findData, addData, deleData, exitData } = require("../middleware/mysql");
+const { findData, addData, deleData, exitData } = require("../../middleware/mysql");
 module.exports = {
   "GET /mysql": async (ctx, next) => {
     ctx.render("mysql.html", {
@@ -7,7 +7,7 @@ module.exports = {
       name: "11111"
     })
   },
-  "GET /mysql/getTableData": async (ctx, next) => {
+  "GET /mysql/user/getTableData": async (ctx, next) => {
     const query = 'SELECT * FROM user'
     // 获取数据
     // let res = ctx.query; // 返回的数据格式为json
@@ -22,7 +22,23 @@ module.exports = {
         }
     );
   },
-  "POST /mysql/addUserInfo": async (ctx, next) => {
+  "GET /mysql/user/getUserInfo": async (ctx, next) => {
+    const { id } = ctx.request.query
+    const queryUser = 'SELECT * FROM user WHERE id = ? '
+    // 获取数据
+    // let res = ctx.query; // 返回的数据格式为json
+    ctx.response.type = "json";
+    //   let statements = res.statements;
+    await findData(queryUser, [id]).then(
+        data => {
+        ctx.body = { message: "OK", code: '200', data: data }
+        },
+        () => {
+        ctx.body = { message: "数据获取失败", code: '500' }
+        }
+    );
+  },
+  "POST /mysql/user/addUserInfo": async (ctx, next) => {
     const { name, password } = ctx.request.body
     const queryUser = 'SELECT * FROM user WHERE username = ? '
     await findData(queryUser,[name]).then(
@@ -48,7 +64,7 @@ module.exports = {
       }
     )
   },
-  "DELETE /mysql/delUserInfo": async (ctx, next) => {
+  "DELETE /mysql/user/delUserInfo": async (ctx, next) => {
     const { id } = ctx.request.query
     const query = 'DELETE FROM user WHERE ??=?'
     // 获取数据
@@ -64,7 +80,7 @@ module.exports = {
         }
     );
   },
-  "PUT /mysql/updateUserInfo": async (ctx, next) => {
+  "PUT /mysql/user/updateUserInfo": async (ctx, next) => {
     const { id, password } = ctx.request.body
     const query = 'UPDATE user SET ??=? WHERE ??=?'
     // 获取数据

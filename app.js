@@ -9,6 +9,10 @@ const templating = require('./middleware/templating');
 // const Sequelize = require('sequelize');
 const config = require('./middleware/mysql');
 
+const session = require('koa-session')
+
+const toHump = require('./middleware/toHump')
+
 // var sequelize = new Sequelize(config.database, config.username, config.password, {
 //     host: config.host,
 //     dialect: 'mysql',
@@ -23,6 +27,20 @@ const app = new Koa();
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+app.keys = ['secretkeys'];
+const CONFIG = {
+   key: 'koa:sess', /* 默认的cookie签名 */
+   maxAge: 86400000,/* cookie的最大过期时间 */
+   autoCommit: true, /** (boolean) automatically commit headers (default true) */
+   overwrite: true, /** 无效属性 */
+   httpOnly: true, /** (boolean) httpOnly or not (default true) */
+   signed: true, /** 默认签名与否 */
+   rolling: false, /** 每次请求强行设置cookie */
+   renew: false, /** cookie快过期时自动重新设置*/
+ };
+  
+app.use(session(CONFIG, app));
+app.use(toHump);
 // log request URL:
 app.use(async (ctx, next) => {
    console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
